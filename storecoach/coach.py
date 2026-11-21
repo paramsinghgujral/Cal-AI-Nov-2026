@@ -32,6 +32,7 @@ DOW_LONG = {"Mon": "Monday", "Tue": "Tuesday", "Wed": "Wednesday", "Thu": "Thurs
 IST = timezone(timedelta(hours=5, minutes=30))
 CARD_MAX_WORDS = 60
 FU_VISIT = ("worse", "no change")   # follow-up visits only where the number did not improve
+FIRST_MORNING = pd.Timestamp("2026-10-01")   # the coach's first morning (replay start); first_raised counts from here
 
 
 # ---- small text helpers ----------------------------------------------------------
@@ -279,6 +280,23 @@ def _keep_lines(beh, own, store_val, since):
             f"Keep it up today: {CAT_HINT.get(cat, 'offer it to every customer it suits')}.")
 
 
+ROLE_BEH = {"Repeat rate": ("repeat", "More repeat"), "Jacket add-on rate": ("jacket_addon", "Bigger baskets"),
+            "Sherwani add-on rate": ("sherwani_addon", "Bigger baskets")}
+
+
+def _role_lines(beh, value, others, store):
+    """(behaviour sentence, action sentence) for a named role model; numbers as in the AM brief."""
+    tail = f"vs {others} for others in {store}: you are the store's role model for it."
+    if beh == "repeat":
+        return (f"{value} of your first-time customers come back, {tail}",
+                "Keep inviting every buyer back for the family's next function today, and show a colleague how you do it.")
+    if beh == "jacket_addon":
+        return (f"you add a jacket to {value} of kurta-set bills, {tail}",
+                "Keep it up today, and show a colleague how you pair a jacket with every kurta set.")
+    return (f"you add a safa, mojari or mala to {value} of sherwani bills, {tail}",
+            "Keep it up today, and show a colleague how you complete every sherwani look.")
+
+
 def cards(m, d) -> list[dict]:
     sp, g = m.salespeople, m.card_gaps
     since = f"{m.windows.salesperson.start.day} {m.windows.salesperson.start:%b}"
@@ -290,6 +308,12 @@ def cards(m, d) -> list[dict]:
         for c in it.get("components") or []:
             if c.get("sp") and c.get("measure"):
                 linked.setdefault(c["sp"], _behaviour_key(c["measure"]))
+    # salespeople named as role models in the AM brief → a keep-doing card on that behaviour (D32),
+    # unless an AM Issue is about them (that card backs the Issue up instead)
+    role = {}
+    for rm in d.role_models:
+        if rm["metric"] in ROLE_BEH:
+            role.setdefault(rm["salesperson_id"], rm)
     out = []
     people = sp[sp.active & sp.established].sort_values(["store_id", "sp"])
     for _, r in people.iterrows():
@@ -302,6 +326,19 @@ def cards(m, d) -> list[dict]:
         pick, kind = None, "gap"
         if r.sp in linked and linked[r.sp] in set(gaps.behaviour):
             pick = gaps[gaps.behaviour == linked[r.sp]].iloc[0]
+        elif r.sp in role:
+            rm = role[r.sp]
+            beh, lever = ROLE_BEH[rm["metric"]]
+            beh_line, act_line = _role_lines(beh, rm["value"], rm["store_value"], r.store_id)
+            text = f"{first(r['name'])}, {beh_line} {act_line}"
+            assert words(text) <= CARD_MAX_WORDS, text
+            out.append({
+                "salesperson_id": r.sp, "name": r["name"], "store_id": r.store_id, "kind": "keep_doing", "lever": lever,
+                "behaviour_key": beh, "behaviour": beh_line[0].upper() + beh_line[1:], "peer": None,
+                "action": act_line, "text": text, "word_count": words(text), "rupees_gap_week": 0,
+                "linked_issue": False, "role_model": True,
+            })
+            continue
         else:
             # tiers: behaviours below the store average first, add-on/discount/IPB/repeat before category share
             for mask in (~gaps.is_share & gaps.below_store, gaps.is_share & gaps.below_store, gaps.gap > 0):
@@ -419,8 +456,9 @@ class Coach:
                 for x, t, i, _ in plans]
         week_sent = [i["id"] for _, t, i, _ in plans if t == "issue"]
 
-        # history for first_raised: this week and the two before
-        hist = self.sent_between(am, mon - 14 * DAY, min(D, mon + 4 * DAY))
+        # history for first_raised: every weekday since the coach's first morning (fixed date, so a
+        # single run and a replay agree; replays reuse the cached picks)
+        hist = self.sent_between(am, FIRST_MORNING, min(D, mon + 4 * DAY))
         first_sent = {}
         for x, i in hist:
             first_sent.setdefault(i["id"], x)
@@ -456,7 +494,7 @@ class Coach:
                 prev = next((r for i, r in self.followups(am, D) if i["id"] == today_issue["id"]), None)
                 if fr is not None and fr < mon:
                     today_note = f"Raised again: first sent {d_short(fr)}." + (
-                        f" Last week's follow-up: {prev['moved']} ({prev['note']})" if prev else "")
+                        f" Last week's follow-up: {prev['moved']}. {prev['note']}" if prev else "")
             elif today_type == "followup":
                 today_note = (f"Every issue for this week has been sent. Today: go back to {today_issue['store_id']} — the issue sent on "
                               f"{d_short(pd.Timestamp(f['raised_on']))} has {'got worse' if f['moved'] == 'worse' else 'not moved'}.")
