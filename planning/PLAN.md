@@ -20,7 +20,7 @@ Vibe Coders Hackathon Ed. 3 · Sat 21 Nov 2026 · Manyavar "Store Coach" stateme
 | 3 | Independent number validation | 1:05–1:30 | C | 2a | ✅ Done 1:46 (`tests/independent.py` re-derives from raw CSVs without `storecoach`; `tests/test_numbers.py` 73 tests pass — every METRICS §7 value + whole store/salesperson/city/category tables match the engine; D23) |
 | 4 | Issue detectors | 1:05–2:05 | A | 2a | ✅ Done 1:15 (F1–F7 + false-alarm checks 10/10 on 2 Nov; all 32 replay mornings run; D19–D22) |
 | 5 | Outputs: AM briefs, cards, follow-ups → JSON | 2:05–2:45 | A | 4 | ✅ Done 1:58 (`coach.py`, `followup.py`, `render.py`, `run.py`; real `site/data/` for 1 Oct → 2 Nov, 33 mornings in ≈ 45 s; `tests/test_outputs.py` passes; D24–D29) |
-| 6 | Final site + hosting + daily run (decide D2 by 2:30) | 2:45–3:20 | B | 2b, 5 | 🟡 Built 14:10 — Action runs `run.py --replay-from 2026-10-01` + pytest before deploy; CSVs committed (D1); one-off cron 21 Nov 09:15 UTC; footer shows real time + trigger (D30). Waiting on user push + green run + public-URL check |
+| 6 | Final site + hosting + daily run (decide D2 by 2:30) | 2:45–3:20 | B | 2b, 5 | ✅ Done 14:10 — manual Action run #2 green (replay 1 Oct → 2 Nov + pytest, then deploy); public URL serves Mon 2 Nov at 375 px, footer "Generated Sat 21 Nov 2026, 14:08 IST by the daily run (started by hand, GitHub Actions run #2)". One-off scheduled run due 14:45 IST (D30) |
 | 7 | End-to-end check, README, video, submit | 3:20–4:30 | — | all | ⬜ |
 
 Lanes A, B and C can run in parallel chat windows (see "Parallel work" at the bottom).
