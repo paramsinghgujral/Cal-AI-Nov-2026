@@ -1,0 +1,45 @@
+# Daily Store Coach run: publishes site/ to GitHub Pages.
+# Runs every morning at 00:30 UTC (6:00 am IST) and on demand (Actions → Daily run → Run workflow).
+# Step 6 adds `python run.py` before the upload; for now it publishes site/ as committed.
+# This workflow never commits to the repo: it only uploads a Pages artifact and deploys it.
+name: Daily run
+
+on:
+  schedule:
+    - cron: "30 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read     # read-only checkout; no pushes back to the repo
+  pages: write       # deploy to Pages
+  id-token: write    # verify the deployment comes from this workflow
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
