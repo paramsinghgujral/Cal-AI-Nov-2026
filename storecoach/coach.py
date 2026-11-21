@@ -108,6 +108,17 @@ CAT_HINT = {
     "Stole": "drape a stole on every kurta-set customer at the mirror",
     "Indo-Western": "show one Indo-Western option to reception and sangeet shoppers",
 }
+# the same habits in the third person for AM actions: (one person, several people)
+CAT_HINT_3P = {
+    "Sherwani": ("shows a sherwani to every groom and close-family customer", "show a sherwani to every groom and close-family customer"),
+    "Kurta Set": ("starts function shoppers on kurta sets", "start function shoppers on kurta sets"),
+    "Jacket": ("puts a matching jacket on every kurta-set customer at the mirror", "put a matching jacket on every kurta-set customer at the mirror"),
+    "Safa": ("brings a safa to the trial room with every sherwani", "bring a safa to the trial room with every sherwani"),
+    "Mojari": ("brings matching mojaris to the trial room with every outfit", "bring matching mojaris to the trial room with every outfit"),
+    "Mala": ("offers a mala with every sherwani", "offer a mala with every sherwani"),
+    "Stole": ("drapes a stole on every kurta-set customer at the mirror", "drape a stole on every kurta-set customer at the mirror"),
+    "Indo-Western": ("shows one Indo-Western option to reception and sangeet shoppers", "show one Indo-Western option to reception and sangeet shoppers"),
+}
 
 
 def _pair_of(meas):
@@ -135,6 +146,7 @@ def action_for(it: dict, D, dates: Dates, peer_of=None) -> dict:
     """`peer_of(sp, behaviour)` → best same-store peer's name for that exact behaviour (from today's card gaps)."""
     typ, sid, fx = it["type"], it["store_id"], it.get("facts") or {}
     wk = dates.weekend(D)
+    on_wk = wk if wk.startswith("today") else "on " + wk   # "on Sat 7 – Sun 8 Nov" / "today and tomorrow (Sun 8 Nov)"
     fest = dates.festival(sid or it["city"], D)
     sellers = [s["name"] for s in fx.get("top_active_sellers", [])]
     quiet = fx.get("quiet_weekday")
@@ -145,19 +157,18 @@ def action_for(it: dict, D, dates: Dates, peer_of=None) -> dict:
 
     if typ == "leaver":
         lv = fx["leavers"][0]["name"]
-        two = names(sellers) or "the two top sellers"
+        s1, s2 = (sellers + ["the store's top seller", "the next-best seller"])[:2] if len(sellers) < 2 else sellers[:2]
         return {"who": f"Store manager, {sid}",
-                "what": (f"Call {lv} today to ask whether {first(lv)} is coming back. Until then {two} cover "
-                         f"{first(lv)}'s share of the floor: one greets every walk-in at the entrance, the other takes the "
-                         f"sherwani and wedding customers, and both are rostered on {wk}{fest}."),
-                "when": f"Today: the call this morning, the floor plan from today through {wk}"}
+                "what": (f"Call {lv} today: is {first(lv)} coming back? Until then {s1} greets every walk-in at the entrance and "
+                         f"{s2} takes the sherwani and wedding customers; both are on the floor {on_wk}{fest}."),
+                "when": f"The call this morning; the floor plan from today through {wk}"}
     if typ == "missing_shifts":
         ms = [x["name"] for x in fx.get("missing_shifts", [])]
         target = (fx.get("staffing") or {}).get("fri_baseline") or (fx.get("staffing") or {}).get("fri")
         return {"who": f"Store manager, {sid}, with {names(ms)}",
-                "what": (f"Agree the coming week's roster with {names(ms)} today: weekly offs on "
-                         f"{DOW_LONG.get(quiet, 'a quiet weekday')} (the store's quietest weekday, next one {dates.next_dow(D, quiet)}), "
-                         f"not Sat/Sun, so {round(target) if target else 'the usual number of'} people are on the floor on {wk}{fest}."),
+                "what": (f"Agree next week's roster with {names(ms)} today: weekly offs on "
+                         f"{DOW_LONG.get(quiet, 'a quiet weekday')} (the quietest day; next one {dates.next_dow(D, quiet)}), "
+                         f"not Sat/Sun, so {round(target) if target else 'the usual number of'} people are on the floor {on_wk}{fest}."),
                 "when": f"Today, before the roster for {wk} is fixed"}
     if typ == "understaffed_busy_days":
         st = fx.get("staffing") or {}
@@ -176,10 +187,19 @@ def action_for(it: dict, D, dates: Dates, peer_of=None) -> dict:
     if typ == "city_slowdown":
         stores = fx.get("stores", [])
         other = [s for s in stores if s != sid]
+        if not fx.get("all_stores_down"):
+            # D19: not every store is down, so it is not proven to be the market — don't say it is
+            down = [s["store_id"] for s in fx.get("per_store", []) if (s.get("gap_pct") or 0) < 0]
+            return {"who": f"Area manager with the store manager of {sid}",
+                    "what": (f"Visit {sid} (the largest shortfall). Only {len(down)} of {len(stores)} stores are down "
+                             f"({names([x for x in stores if x not in down])} {'is' if len(stores) - len(down) == 1 else 'are'} not), "
+                             f"so check on the floor whether it is the store or the market: is every walk-in greeted, and is every buyer "
+                             f"shown the complete look (kurta set, jacket and mojari)? Keep full staff {on_wk}{fest}."),
+                    "when": f"Today at {sid}"}
         return {"who": f"Area manager with the store managers of {names(stores)}",
-                "what": (f"Visit {sid} (the largest shortfall). This is the market, not one team, so no blame: agree one habit for "
-                         f"{'both stores' if len(stores) == 2 else 'every store'} — show every buyer the complete look (kurta set, jacket and "
-                         f"mojari together) to hold bill value — and keep full staff on {wk}{fest}."),
+                "what": (f"Visit {sid} (the largest shortfall). It is the market, not one team, so no blame: agree with "
+                         f"{'both stores' if len(stores) == 2 else 'every store'} to show every buyer the complete look (kurta set, jacket "
+                         f"and mojari) and keep full staff {on_wk}{fest}."),
                 "when": f"Today at {sid}" + (f"; phone {names(other)} today" if other else "")}
     if typ == "ipb_drop":
         low = fx.get("lowest_ipb") or []
@@ -187,7 +207,7 @@ def action_for(it: dict, D, dates: Dates, peer_of=None) -> dict:
         who_low = names([x["name"] for x in low]) or "every salesperson"
         return {"who": f"Store manager, {sid}",
                 "what": (f"At today's opening huddle {best} shows how to add a second piece (jacket, mojari or stole) to a kurta-set "
-                         f"sale; {who_low} offer one with every buyer today."),
+                         f"sale; {who_low} {'offers' if len(low) == 1 else 'offer'} one with every buyer today."),
                 "when": "Today, from opening; check items per bill at closing"}
     if typ == "addon":
         parts = []
@@ -198,11 +218,21 @@ def action_for(it: dict, D, dates: Dates, peer_of=None) -> dict:
         return {"who": f"{names(nm)}, with the store manager", "what": "; ".join(parts) + ".",
                 "when": "Today, from the opening huddle; store manager checks their bills at closing"}
     if typ == "category":
-        parts = []
+        # group people who need the same habit: "A and B drape a stole … (C shows how)"
+        groups = {}
         for c in comps:
             cat = c["measure"].get("category", "")
             pr = peer_of(c["sp"], f"share:{cat}") or (peers.get(c["sp"]) or {}).get("name")
-            parts.append(f"{c['name']}: {CAT_HINT.get(cat, 'offer it to every customer it suits')}" + (f"; {pr} shows how" if pr else ""))
+            g = groups.setdefault(cat, {"who": [], "peers": []})
+            if c["name"] not in g["who"]:
+                g["who"].append(c["name"])
+            if pr and pr not in g["peers"] and pr not in g["who"]:
+                g["peers"].append(pr)
+        parts = []
+        for cat, g in groups.items():
+            hint = CAT_HINT_3P.get(cat, ("offers it to every customer it suits", "offer it to every customer it suits"))
+            parts.append(f"{names(g['who'])} {hint[0] if len(g['who']) == 1 else hint[1]}"
+                         + (f" ({names(g['peers'])} {'shows' if len(g['peers']) == 1 else 'show'} how)" if g["peers"] else ""))
         return {"who": f"{names(nm)}, with the store manager", "what": "; ".join(parts) + ".",
                 "when": "Today, from the opening huddle"}
     if typ == "discount":
@@ -210,16 +240,17 @@ def action_for(it: dict, D, dates: Dates, peer_of=None) -> dict:
         pr = next((n for c in comps if (n := peer_of(c["sp"], "discount"))), None) or next((p["name"] for p in peers.values() if p), None)
         return {"who": f"Store manager, {sid}, with {names(nm)}",
                 "what": (f"From today, any discount by {names(nm)} above the store's usual {pc(exp)} needs the store manager's OK at "
-                         f"the till" + (f"; {pr}, who sells closest to MRP, shares how at the huddle." if pr else ".")),
+                         f"the till" + (f"; {pr}, who sells closest to MRP, shares at the huddle how to hold the price." if pr else ".")),
                 "when": "Today, from opening"}
     if typ == "low_repeat":
         rm = fx.get("role_model_peer") or {}
         rmn = rm.get("name")
         return {"who": f"{names(nm)}, with the store manager",
-                "what": ((f"{names(nm)} {'shadows' if len(nm) == 1 else 'shadow'} {rmn} at billing today and copy how {first(rmn)} "
-                          "asks about the family's next function, saves the customer's number, and invites them back for it.") if rmn else
-                         (f"{names(nm)} {'asks' if len(nm) == 1 else 'ask'} every buyer about the family's next function, save the "
-                          "customer's number, and invite them back for it.")),
+                "what": ((f"{names(nm)} {'shadows' if len(nm) == 1 else 'shadow'} {rmn} at billing today and "
+                          f"{'copies' if len(nm) == 1 else 'copy'} how {first(rmn)} asks about the family's next function, "
+                          "saves the number and invites them back for it.") if rmn else
+                         (f"{names(nm)} {'asks' if len(nm) == 1 else 'ask'} every buyer about the family's next function, "
+                          f"{'saves' if len(nm) == 1 else 'save'} the number and {'invites' if len(nm) == 1 else 'invite'} them back for it.")),
                 "when": "Today; store manager checks in at closing"}
     return {"who": f"Store manager, {sid}", "what": it["title"], "when": "Today"}
 
@@ -286,14 +317,14 @@ ROLE_BEH = {"Repeat rate": ("repeat", "More repeat"), "Jacket add-on rate": ("ja
 
 def _role_lines(beh, value, others, store):
     """(behaviour sentence, action sentence) for a named role model; numbers as in the AM brief."""
-    tail = f"vs {others} for others in {store}: you are the store's role model for it."
+    tail = f"vs {others} for others in {store}. You are the store's role model."
     if beh == "repeat":
-        return (f"{value} of your first-time customers come back, {tail}",
+        return (f"{value} of your first-time customers come back {tail}",
                 "Keep inviting every buyer back for the family's next function today, and show a colleague how you do it.")
     if beh == "jacket_addon":
-        return (f"you add a jacket to {value} of kurta-set bills, {tail}",
+        return (f"you add a jacket to {value} of kurta-set bills {tail}",
                 "Keep it up today, and show a colleague how you pair a jacket with every kurta set.")
-    return (f"you add a safa, mojari or mala to {value} of sherwani bills, {tail}",
+    return (f"you add a safa, mojari or mala to {value} of sherwani bills {tail}",
             "Keep it up today, and show a colleague how you complete every sherwani look.")
 
 
@@ -486,15 +517,15 @@ class Coach:
         today_type, today_issue, today_note = "weekend", None, None
         if weekend:
             nxt = D + (7 - D.dayofweek) * DAY
-            today_note = f"No area-manager issue at weekends. The next one arrives on {d_short(nxt)} morning."
+            today_note = f"No area-manager issue at weekends. The next one arrives on Monday morning ({nxt.day} {nxt:%b})."
         else:
             today_type, today_issue, f = plans[-1][1], plans[-1][2], plans[-1][3]
             if today_type == "issue":
                 fr = first_sent.get(today_issue["id"])
                 prev = next((r for i, r in self.followups(am, D) if i["id"] == today_issue["id"]), None)
                 if fr is not None and fr < mon:
-                    today_note = f"Raised again: first sent {d_short(fr)}." + (
-                        f" Last week's follow-up: {prev['moved']}. {prev['note']}" if prev else "")
+                    today_note = f"Raised again (first sent {d_short(fr)})." + (
+                        f" Last week's follow-up: {prev['moved']}." if prev else "")
             elif today_type == "followup":
                 today_note = (f"Every issue for this week has been sent. Today: go back to {today_issue['store_id']} — the issue sent on "
                               f"{d_short(pd.Timestamp(f['raised_on']))} has {'got worse' if f['moved'] == 'worse' else 'not moved'}.")

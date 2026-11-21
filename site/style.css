@@ -132,3 +132,21 @@ table.ev td.num { text-align: right; white-space: nowrap; }
 .empty { color: var(--muted); padding: 16px 0; }
 .error { color: var(--bad); padding: 16px 0; }
 .foot { color: var(--muted); font-size: .8rem; margin-top: 32px; border-top: 1px solid var(--line); padding-top: 10px; }
+
+/* collapsed issue rows (Next in line / Watch list) */
+details.row-card { padding: 10px 14px; }
+details.row-card > summary {
+  display: flex; gap: 10px; align-items: baseline; cursor: pointer; list-style: none;
+}
+details.row-card > summary::-webkit-details-marker { display: none; }
+details.row-card > summary::before { content: "▸"; color: var(--muted); }
+details.row-card[open] > summary::before { content: "▾"; }
+details.row-card .sum-title { flex: 1; min-width: 0; }
+details.row-card[open] > summary { margin-bottom: 8px; }
+.card.inner { border: 0; padding: 0; margin: 0; }
+.action .what { margin: 0 0 2px; }
+.action .small { margin: 0; }
+@media (max-width: 600px) {
+  table.ev td.num { white-space: normal; min-width: 4.5em; }
+  table.ev th, table.ev td { padding: 4px 4px; }
+}

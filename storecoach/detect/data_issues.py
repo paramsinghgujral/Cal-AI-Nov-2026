@@ -68,9 +68,10 @@ def new_stores(m) -> list[dict]:
         days = (m.as_of - s.opened_on).days
         if days < 0:
             continue
+        ago = "yesterday" if days <= 1 else f"{days} days ago"
         out.append({
             "type": "new_store", "store_id": s.store_id,
-            "detail": f"{s.store_id} opened on {day(s.opened_on)} {s.opened_on.year} ({days} days ago) — too new to compare fairly.",
+            "detail": f"{s.store_id} opened on {day(s.opened_on)} {s.opened_on.year} ({ago}) — too new to compare fairly.",
             "dates": f"{iso(s.opened_on)} → {iso(m.as_of - pd.Timedelta(days=1))}",
             "excluded_from": "store comparisons, peer groups and AM alerts (until 90 days open)",
         })

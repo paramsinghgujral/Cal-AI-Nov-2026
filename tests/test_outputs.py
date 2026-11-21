@@ -67,7 +67,7 @@ def test_contract_and_rules():
             assert len({f["issue_id"] for f in m["followups"]}) == len(m["followups"])
             for f in m["followups"]:
                 assert FU_KEYS <= f.keys()
-                assert f["moved"] in ("better", "worse", "no change", "too few bills to tell", "too early to tell")
+                assert f["moved"] in ("better", "worse", "no change", "too little data to tell", "too early to tell")
         for c in run["cards"]:
             assert CARD_KEYS <= c.keys()
             assert c["word_count"] == len(c["text"].split()) <= 60, c["text"]

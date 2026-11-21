@@ -15,6 +15,11 @@ def isnum(x) -> bool:
     return x is not None and not (isinstance(x, float) and math.isnan(x)) and not pd.isna(x)
 
 
+def cat_lc(cat) -> str:
+    """Category name mid-sentence: 'jacket', 'kurta set', but 'Indo-Western' keeps its capitals."""
+    return cat if not cat or cat.startswith("Indo") else cat.lower()
+
+
 def pct(x, d=1) -> str:
     return f"{x * 100:.{d}f}%" if isnum(x) else "—"
 

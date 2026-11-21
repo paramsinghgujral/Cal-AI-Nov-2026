@@ -3,7 +3,7 @@
 For an issue sent on D0, re-measure the issue's `measure` (set by Step 4) over the
 7 days D0 … D0+6 and compare the gap with the gap at the time of the alert:
 better ≤ 75% of the alert gap, worse ≥ 125%, otherwise no change. Fewer than ¼ of
-the minimum sample → "too few bills to tell". Repeat needs 30+ days to show, so a
+the minimum sample → "too little data to tell". Repeat needs 30+ days to show, so a
 low-repeat issue is always "too early to tell".
 
 The "expected" value is re-derived for the follow-up week the same way the alert
@@ -16,6 +16,7 @@ import math
 
 import pandas as pd
 
+from .detect.common import cat_lc
 from .metrics import ESTABLISHED_DAYS, Window
 
 DAY = pd.Timedelta(days=1)
@@ -135,11 +136,11 @@ class FollowUp:
         meas = issue["measure"]
         metric = meas["metric"]
         assert d0 + 6 * DAY <= as_of - DAY, "follow-up window must be before the run date (no look-ahead)"
-        label = LABEL.get(metric, metric).format(category=meas.get("category", ""))
+        label = LABEL.get(metric, metric).format(category=cat_lc(meas.get("category", "")))
         who = issue["salesperson_ids"][0] if issue.get("salesperson_ids") and metric.startswith("sp_") else None
         if who:
             name = next((c.get("name") for c in issue.get("components", []) if c.get("sp") == who), who)
-            label = f"{name}: {label if metric == 'sp_category_share' else label[0].lower() + label[1:]}"
+            label = f"{name}: {label[0].lower() + label[1:] if not label.startswith('Indo') else label}"
         exp_a, act_a = meas["expected"], meas["actual"]
         at_alert = f"{fmt(metric, act_a)} (expected {fmt(metric, exp_a)})"
         row = {"issue_id": issue["id"], "raised_on": f"{d0:%Y-%m-%d}", "metric": label, "at_alert": at_alert,
@@ -150,20 +151,26 @@ class FollowUp:
                           "note": "A repeat visit needs 30+ days, so one week can't show it. Check again next month."}
         r = self.remeasure(meas, d0)
         if r is None:
-            return row | {"now": "—", "moved": "too few bills to tell", "note": "This measure can't be re-checked in one week."}
+            return row | {"now": "—", "moved": "too little data to tell", "note": "This measure can't be re-checked in one week."}
         exp_n, act_n, n = r
         row["now"] = f"{fmt(metric, act_n)} (expected {fmt(metric, exp_n)})"
         if n < MIN_FU.get(metric, 0) or any(isinstance(x, float) and math.isnan(x) for x in (exp_n, act_n)):
-            unit_n = {"store_busy_conv": "weekend walk-ins", "sp_sherwani_addon": "sherwani bills", "sp_jacket_addon": "kurta-set bills",
-                      "sp_category_share": "expected units"}.get(metric, "bills")
-            return row | {"moved": "too few bills to tell",
-                          "note": f"Only {n:.{1 if metric == 'sp_category_share' else 0}f} {unit_n} in the week after the alert (need {MIN_FU[metric]}), so it can't be judged yet."}
+            if metric == "sp_category_share":
+                cat = cat_lc(meas.get("category", ""))
+                note = f"Too few items sold in the week after the alert to judge the {cat} share yet."
+            else:
+                one, many = {"store_busy_conv": ("weekend walk-in", "weekend walk-ins"), "sp_sherwani_addon": ("sherwani bill", "sherwani bills"),
+                             "sp_jacket_addon": ("kurta-set bill", "kurta-set bills")}.get(metric, ("bill", "bills"))
+                k = int(round(n))
+                note = (f"No {many} in the week after the alert, so it can't be judged yet." if k == 0 else
+                        f"Only {k} {one if k == 1 else many} in the week after the alert (need {MIN_FU[metric]}), so it can't be judged yet.")
+            return row | {"moved": "too little data to tell", "note": note}
         g_a, g_n = _gap(metric, exp_a, act_a), _gap(metric, exp_n, act_n)
         moved = "better" if g_n <= 0.75 * g_a else "worse" if g_n >= 1.25 * g_a else "no change"
         unit = (lambda g: f"₹{g:,.0f}") if metric == "city_rpf" else (lambda g: f"{g:.2f}") if metric == "store_ipb" \
             else (lambda g: f"{g * 100:.1f} pts")
         if g_n <= 0:
-            note = f"Gap closed: was {unit(g_a)} short of expected, now at or above it over {d0.day} {d0:%b} – {(d0 + 6 * DAY).day} {(d0 + 6 * DAY):%b}."
+            note = f"Gap closed: was {unit(g_a)} short of expected, at or above it in the 7 days after ({d0.day}–{(d0 + 6 * DAY).day} {(d0 + 6 * DAY):%b})." if d0.month == (d0 + 6 * DAY).month else                 f"Gap closed: was {unit(g_a)} short of expected, at or above it in the 7 days after ({d0.day} {d0:%b} – {(d0 + 6 * DAY).day} {(d0 + 6 * DAY):%b})."
         else:
             note = (f"Gap {unit(g_a)} at the alert, {unit(g_n)} in the 7 days after "
                     f"({'closing' if moved == 'better' else 'widening' if moved == 'worse' else 'about the same'}).")

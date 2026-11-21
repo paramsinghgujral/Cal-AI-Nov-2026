@@ -11,7 +11,7 @@ from __future__ import annotations
 import pandas as pd
 
 from .bills import _ipb_comp, _comp_view
-from .common import (LEVEL_ORDER, component_view, plural, ev, f, group_components, make_issue, names, num, pct, rs, span, strongest)
+from .common import (LEVEL_ORDER, cat_lc, component_view, plural, ev, f, group_components, make_issue, names, num, pct, rs, span, strongest)
 
 ADDON = {
     "shw": {"label": "sherwani", "pair": "a safa, mojari or mala", "behaviour": "sherwani_addon", "cats": ("Safa", "Mojari", "Mala"),
@@ -60,7 +60,7 @@ def _category_comps(m):
             "sp": r.sp, "name": r["name"], "store_id": r.store_id, "level": r.level, "z": r.z, "rs": r.rs_week,
             "category": r.category, "short": f"{int(r.qty)} {plural(r.category, int(r.qty))} vs {r.expected:.0f} expected",
             "what": f"{int(r.qty)} {plural(r.category, int(r.qty))} sold vs {r.expected:.0f} expected at others' share",
-            "evidence": [ev(f"{r['name']}: {r.category} units sold, {span(w.salesperson)}", f"{int(r.qty)} of {int(r['items'])} items ({pct(r.share)})",
+            "evidence": [ev(f"{r['name']}: {cat_lc(r.category)} units sold, {span(w.salesperson)}", f"{int(r.qty)} of {int(r['items'])} items ({pct(r.share)})",
                             f"{r.expected:.0f} expected at others' share ({pct(r.peer_share)})")],
             "measure": {"metric": "sp_category_share", "salesperson_id": r.sp, "category": r.category,
                         "expected": f(r.peer_share), "actual": f(r.share), "min_sample": "5 expected units"},

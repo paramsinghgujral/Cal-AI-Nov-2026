@@ -113,30 +113,59 @@
   }
 
   // ---------- pieces ----------
+  // Issue types whose "why" only restates the title (the numbers are in the evidence table) → no Why line.
+  const CAUSE_IN_TITLE = new Set(["addon", "category", "low_repeat", "discount"]);
+  const SPAN_RE = /, (\d{1,2} [A-Z][a-z]{2} – \d{1,2} [A-Z][a-z]{2})$/;
+
+  // Evidence table: when every dated row covers the same dates, say them once in the header.
+  function evidenceTable(rows) {
+    if (!rows.length) return "";
+    const spans = rows.map((e) => (SPAN_RE.exec(e.label || "") || [])[1]).filter(Boolean);
+    const one = spans.length && spans.every((x) => x === spans[0]) ? spans[0] : null;
+    const body = rows.map((e) => {
+      const label = one ? String(e.label).replace(SPAN_RE, "") : e.label;
+      return `<tr><td>${esc(label)}</td><td class="num">${esc(e.value)}</td><td class="num quiet">${esc(e.baseline ?? "")}</td></tr>`;
+    }).join("");
+    return `<table class="ev"><thead><tr><th>Evidence${one ? ` <span class="small quiet">${esc(one)}</span>` : ""}</th>
+      <th class="num">Now</th><th class="num">Normal</th></tr></thead><tbody>${body}</tbody></table>`;
+  }
+
   function issueCard(it, opts = {}) {
     const watch = it.level === "watch";
-    const cls = ["card", watch ? "watch" : "", opts.today ? "today" : ""].join(" ");
-    const where = it.scope === "city" ? "City-wide" : esc(it.store_id) + (it.salesperson_id ? " · " + esc(it.salesperson_id) : "");
-    const ev = (it.evidence || []).map((e) =>
-      `<tr><td>${esc(e.label)}</td><td class="num">${esc(e.value)}</td><td class="num quiet">${esc(e.baseline ?? "")}</td></tr>`).join("");
+    const cls = ["card", watch ? "watch" : "", opts.today ? "today" : "", opts.inner ? "inner" : ""].join(" ");
+    const where = it.scope === "city" ? "City-wide" : esc(it.store_id);
     const a = it.action || {};
+    const showCause = it.cause && !CAUSE_IN_TITLE.has(it.type);
     return `<article class="${cls}">
-      <div class="row">
+      ${opts.inner ? "" : `<div class="row">
         ${watch ? `<span class="tag watch">Early signal: check, not proven</span>` : `<span class="tag">Issue${it.rank ? " #" + esc(it.rank) : ""}</span>`}
         <span class="tag plain">${esc(it.lever)}</span>
         <span class="tag plain">${where}</span>
         ${opts.status ? `<span class="tag plain">${esc(opts.status)}</span>` : ""}
         <span class="rupees">${rupees(it.rupees_at_stake_week)}<span class="small"> /week</span></span>
       </div>
-      <p class="title">${esc(it.title)}</p>
-      <p class="cause"><span class="quiet">Why: </span>${esc(it.cause)}</p>
-      ${it.action ? `<div class="action"><dl>
-        <dt>Who</dt><dd>${esc(a.who)}</dd>
-        <dt>What</dt><dd>${esc(a.what)}</dd>
-        <dt>When</dt><dd>${esc(a.when)}</dd></dl></div>` : ""}
-      ${ev ? `<table class="ev"><thead><tr><th>Evidence</th><th class="num">Now</th><th class="num">Normal</th></tr></thead><tbody>${ev}</tbody></table>` : ""}
+      <p class="title">${esc(it.title)}</p>`}
+      ${showCause ? `<p class="cause"><span class="quiet">Why: </span>${esc(it.cause)}</p>` : ""}
+      ${it.action ? `<div class="action"><p class="what">${esc(a.what)}</p>
+        <p class="small quiet">${esc(a.who)} · ${esc(a.when)}</p></div>` : ""}
+      ${evidenceTable(it.evidence || [])}
       ${it.first_raised ? `<p class="small">First raised ${esc(fmtDate(it.first_raised))}</p>` : ""}
     </article>`;
+  }
+
+  // One line per issue (title + ₹); tap to open the full card.
+  function issueRow(it, opts = {}) {
+    const watch = it.level === "watch";
+    return `<details class="card row-card${watch ? " watch" : ""}">
+      <summary><span class="sum-title">${it.scope === "city" ? "" : `<b>${esc(it.store_id)}</b> `}${esc(it.title)}</span>
+        <span class="rupees">${rupees(it.rupees_at_stake_week)}<span class="small">/wk</span></span></summary>
+      <div class="row">
+        ${watch ? `<span class="tag watch">Early signal: check, not proven</span>` : `<span class="tag">Issue${it.rank ? " #" + esc(it.rank) : ""}</span>`}
+        <span class="tag plain">${esc(it.lever)}</span>
+        ${opts.status ? `<span class="tag plain">${esc(opts.status)}</span>` : ""}
+      </div>
+      ${issueCard(it, { inner: true })}
+    </details>`;
   }
 
   function movedTag(m) {
@@ -220,8 +249,8 @@
       <p class="quiet">${esc(m.name)} · ${esc(m.area_manager_id)} · ${esc((m.stores || []).join(", "))}</p>
       ${todayBlock(m)}
       ${weekBlock(m)}
-      ${issuesNext.length ? `<h2>Next in line</h2>${issuesNext.map((i) => issueCard(i, { status: "not sent yet" })).join("")}` : ""}
-      ${watchNext.length ? `<h2>Watch list</h2>${watchNext.map((i) => issueCard(i)).join("")}` : ""}
+      ${issuesNext.length ? `<h2>Next in line <span class="small quiet">tap to open</span></h2>${issuesNext.map((i) => issueRow(i, { status: "not sent yet" })).join("")}` : ""}
+      ${watchNext.length ? `<h2>Watch list <span class="small quiet">tap to open</span></h2>${watchNext.map((i) => issueRow(i)).join("")}` : ""}
       ${rm ? `<h2>Role models</h2>${rm}` : ""}`;
   }
 
@@ -258,12 +287,16 @@
   }
 
   // ---------- Data issues tab ----------
+  const DATA_LABEL = {
+    camera_zero: "Footfall camera reads 0", footfall_below_bills: "Fewer walk-ins than bills", footfall_spike: "Footfall spike",
+    footfall_dip: "Footfall dip", placeholder_customer: "Dummy customer number", new_store: "New store", billed_on_off_day: "Bills on an off day",
+  };
   function renderDI() {
     const list = run.data_issues || [];
     const head = `<p class="quiet">Things in the data that look wrong. These are kept out of the numbers and are never sent to area managers.</p>`;
     if (!list.length) return head + `<p class="empty">No data issues found.</p>`;
     return head + list.map((d) => `<article class="card">
-      <div class="row"><span class="tag plain">${esc(d.type)}</span>${d.store_id ? `<span class="tag plain">${esc(d.store_id)}</span>` : ""}</div>
+      <div class="row"><span class="tag plain">${esc(DATA_LABEL[d.type] || d.type)}</span>${d.store_id ? `<span class="tag plain">${esc(d.store_id)}</span>` : ""}</div>
       <p>${esc(d.detail)}</p>
       <p class="small">${d.dates ? esc(d.dates) + " · " : ""}${d.excluded_from ? "left out of " + esc(d.excluded_from) : ""}</p>
     </article>`).join("");
