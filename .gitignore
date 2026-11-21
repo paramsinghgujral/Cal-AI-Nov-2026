@@ -1,0 +1,8 @@
+# Company-provided data packs and hackathon PDFs — not for the public repo
+*.zip
+*.pdf
+
+# Raw data pack (pending OK from Manyavar to publish)
+data/
+__pycache__/
+*.pyc
