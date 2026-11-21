@@ -1,19 +1,26 @@
-"""Store Coach CLI.
+"""Store Coach CLI — the daily run.
 
-    python run.py --as-of 2026-11-02          # print the metrics summary for that morning
+    python run.py                              # latest morning (first weekday after the data ends) → site/data/
+    python run.py --as-of 2026-11-02           # one morning → site/data/runs/2026-11-02.json + index.json
+    python run.py --replay-from 2026-10-01     # every morning from 1 Oct to the latest (or --as-of)
+    python run.py --as-of 2026-11-02 --summary # print the Step 2a metrics summary instead
 
-Steps 4–5 add detection and JSON output; for now this prints the Step 2a metrics.
+A run "as of D" sees only data dated <= D-1. No state is saved between runs: each
+morning's AM brief replays its own week from Monday.
 """
 from __future__ import annotations
 
 import argparse
+import sys
 import time
 
 import pandas as pd
 
+from storecoach.coach import Coach
 from storecoach.load import load
 from storecoach.metrics import compute
 from storecoach.prep import prepare
+from storecoach.render import SITE_DATA, write_index, write_run
 
 pd.set_option("display.width", 200)
 pd.set_option("display.max_columns", 30)
@@ -107,18 +114,41 @@ def summary(m) -> str:
     return "\n".join(out)
 
 
+def latest_morning(prep) -> pd.Timestamp:
+    """First weekday after the last day of data (data ends Sat 31 Oct 2026 → Mon 2 Nov, D6)."""
+    d = prep.data_end + pd.Timedelta(days=1)
+    while d.dayofweek >= 5:
+        d += pd.Timedelta(days=1)
+    return d
+
+
 def main():
     ap = argparse.ArgumentParser(description="Store Coach daily run")
-    ap.add_argument("--as-of", default="2026-11-02", help="morning of the run (sees data up to the day before)")
+    ap.add_argument("--as-of", default=None, help="morning of the run (sees data up to the day before); default = latest")
+    ap.add_argument("--replay-from", default=None, help="also write every morning from this date up to --as-of")
+    ap.add_argument("--out", default=SITE_DATA, help="output folder (default site/data)")
+    ap.add_argument("--summary", action="store_true", help="print the metrics summary for --as-of instead of writing JSON")
     args = ap.parse_args()
+    sys.stdout.reconfigure(encoding="utf-8")
     t0 = time.time()
     prep = prepare(load())
+    as_of = pd.Timestamp(args.as_of) if args.as_of else latest_morning(prep)
     t1 = time.time()
-    m = compute(prep, args.as_of)
-    t2 = time.time()
-    print(summary(m))
-    print(f"\nload+prep {t1 - t0:.1f}s, metrics {t2 - t1:.1f}s")
-
+    if args.summary:
+        m = compute(prep, as_of)
+        print(summary(m))
+        print(f"\nload+prep {t1 - t0:.1f}s, metrics {time.time() - t1:.1f}s")
+        return
+    days = pd.date_range(args.replay_from, as_of) if args.replay_from else [as_of]
+    coach = Coach(prep)
+    for D in days:
+        run = coach.build(D)
+        write_run(run, args.out)
+        n = run["counts"]
+        today = ", ".join(f"{x['city']}:{x['today_type']}" for x in run["managers"])
+        print(f"{D:%a %Y-%m-%d}  {n['issues']} issues, {n['watch']} watch, {len(run['cards'])} cards  |  {today}")
+    write_index(f"{as_of:%Y-%m-%d}", args.out)
+    print(f"wrote {len(days)} run(s) to {args.out}  (load+prep {t1 - t0:.1f}s, runs {time.time() - t1:.1f}s)")
 
 if __name__ == "__main__":
     main()

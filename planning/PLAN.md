@@ -19,7 +19,7 @@ Vibe Coders Hackathon Ed. 3 · Sat 21 Nov 2026 · Manyavar "Store Coach" stateme
 | 2b | Site skeleton (runs locally; hosting deferred — D2) | 12:05–12:50 | B | output contract (below) | ✅ Done 12:45 (sample runs 30 Oct / 31 Oct / 2 Nov; contract additions in KNOWLEDGE_LOG D18). Pages + daily Action live 13:25 (D2 decided): https://paramsinghgujral.github.io/Cal-AI-Nov-2026/ |
 | 3 | Independent number validation | 1:05–1:30 | C | 2a | ✅ Done 1:46 (`tests/independent.py` re-derives from raw CSVs without `storecoach`; `tests/test_numbers.py` 73 tests pass — every METRICS §7 value + whole store/salesperson/city/category tables match the engine; D23) |
 | 4 | Issue detectors | 1:05–2:05 | A | 2a | ✅ Done 1:15 (F1–F7 + false-alarm checks 10/10 on 2 Nov; all 32 replay mornings run; D19–D22) |
-| 5 | Outputs: AM briefs, cards, follow-ups → JSON | 2:05–2:45 | A | 4 | ⬜ |
+| 5 | Outputs: AM briefs, cards, follow-ups → JSON | 2:05–2:45 | A | 4 | ✅ Done 1:58 (`coach.py`, `followup.py`, `render.py`, `run.py`; real `site/data/` for 1 Oct → 2 Nov, 33 mornings in ≈ 45 s; `tests/test_outputs.py` passes; D24–D29) |
 | 6 | Final site + hosting + daily run (decide D2 by 2:30) | 2:45–3:20 | B | 2b, 5 | ⬜ |
 | 7 | End-to-end check, README, video, submit | 3:20–4:30 | — | all | ⬜ |
 
