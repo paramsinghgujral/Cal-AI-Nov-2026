@@ -1,0 +1,4 @@
+# Pinned to the versions every number was checked with (Python 3.10).
+pandas==1.4.0
+numpy==1.22.2
+pytest==9.2.0

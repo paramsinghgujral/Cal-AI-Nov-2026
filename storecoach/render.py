@@ -40,9 +40,20 @@ def write_run(run: dict, out_dir: str = SITE_DATA) -> str:
     return path
 
 
+def _generated_by() -> dict:
+    """Who produced this build: the GitHub Action (scheduled or manual) or a local run."""
+    event = os.environ.get("GITHUB_EVENT_NAME")
+    if not event:
+        return {"trigger": "local"}
+    run_id = os.environ.get("GITHUB_RUN_ID", "")
+    url = f"{os.environ.get('GITHUB_SERVER_URL', 'https://github.com')}/{os.environ.get('GITHUB_REPOSITORY', '')}/actions/runs/{run_id}"
+    return {"trigger": event, "run_number": os.environ.get("GITHUB_RUN_NUMBER"), "url": url if run_id else None}
+
+
 def write_index(latest: str, out_dir: str = SITE_DATA) -> str:
     runs = sorted(f[:-5] for f in os.listdir(os.path.join(out_dir, "runs")) if f.endswith(".json"))
-    idx = {"latest": latest, "runs": runs, "generated_at": datetime.now(IST).isoformat(timespec="seconds")}
+    idx = {"latest": latest, "runs": runs, "generated_at": datetime.now(IST).isoformat(timespec="seconds"),
+           "generated_by": _generated_by()}
     path = os.path.join(out_dir, "index.json")
     with open(path, "w", encoding="utf-8") as fh:
         json.dump(idx, fh, ensure_ascii=False, indent=1)

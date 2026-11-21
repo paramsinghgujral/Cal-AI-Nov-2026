@@ -35,6 +35,22 @@
     history.replaceState(null, "", "#" + p.toString());
   }
 
+  // "Generated Sat 21 Nov 2026, 14:47 IST by the daily run (scheduled, GitHub Actions run #5)."
+  function footText(index) {
+    if (!index.generated_at) return "";
+    const g = index.generated_at;                       // ISO with +05:30, written by run.py
+    const when = `${fmtDate(g.slice(0, 10))}, ${g.slice(11, 16)} IST`;
+    const by = index.generated_by || {};
+    const how = { schedule: "scheduled", workflow_dispatch: "started by hand", push: "on push" }[by.trigger];
+    if (by.trigger === "local") return `Generated ${esc(when)} by a local run.`;
+    let src = "";
+    if (how) {
+      const run = `GitHub Actions run #${esc(by.run_number || "?")}`;
+      src = ` (${how}, ${by.url ? `<a href="${esc(by.url)}">${run}</a>` : run})`;
+    }
+    return `Generated ${esc(when)} by the daily run${src}.`;
+  }
+
   async function getJSON(url) {
     if (cache[url]) return cache[url];
     const r = await fetch(url, { cache: "no-cache" });
@@ -64,9 +80,7 @@
     document.querySelectorAll(".tabs button").forEach((b) =>
       b.addEventListener("click", () => { state.t = b.dataset.tab; render(); }));
 
-    $("#foot").textContent = index.generated_at
-      ? `Generated ${index.generated_at.replace("T", " ").slice(0, 16)} IST by the daily run.`
-      : "";
+    $("#foot").innerHTML = footText(index);
     loadRun();
   }
 

@@ -1,12 +1,14 @@
-# Daily Store Coach run: publishes site/ to GitHub Pages.
+# Daily Store Coach run: rebuilds every morning's brief from data/raw/*.csv and publishes site/ to GitHub Pages.
 # Runs every morning at 00:30 UTC (6:00 am IST) and on demand (Actions → Daily run → Run workflow).
-# Step 6 adds `python run.py` before the upload; for now it publishes site/ as committed.
+# The latest morning comes from the data (data ends Sat 31 Oct 2026 → Mon 2 Nov), not from today's date,
+# so any day's run rebuilds the same briefs; only the "Generated …" stamp changes.
 # This workflow never commits to the repo: it only uploads a Pages artifact and deploys it.
 name: Daily run
 
 on:
   schedule:
-    - cron: "30 0 * * *"
+    - cron: "30 0 * * *"    # daily, 6:00 am IST
+    - cron: "15 9 21 11 *"  # one-off: Sat 21 Nov 2026, 2:45 pm IST (hackathon demo); remove afterwards
   workflow_dispatch:
 
 permissions:
@@ -24,6 +26,23 @@ jobs:
     steps:
       - name: Check out
         uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: pip
+
+      - name: Install
+        run: pip install -r requirements.txt
+
+      - name: Run Store Coach (every morning 1 Oct → latest)
+        env:
+          PYTHONIOENCODING: utf-8
+        run: python run.py --replay-from 2026-10-01
+
+      - name: Check numbers and outputs
+        run: python -m pytest -q
 
       - name: Set up Pages
         uses: actions/configure-pages@v5

@@ -2,7 +2,10 @@
 *.zip
 *.pdf
 
-# Raw data pack (pending OK from Manyavar to publish)
-/data/
+# Raw data: only the CSVs in data/raw/ are committed (D1 — the daily Action needs them)
+/data/*
+!/data/raw/
+/data/raw/*
+!/data/raw/*.csv
 __pycache__/
 *.pyc

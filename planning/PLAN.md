@@ -20,7 +20,7 @@ Vibe Coders Hackathon Ed. 3 · Sat 21 Nov 2026 · Manyavar "Store Coach" stateme
 | 3 | Independent number validation | 1:05–1:30 | C | 2a | ✅ Done 1:46 (`tests/independent.py` re-derives from raw CSVs without `storecoach`; `tests/test_numbers.py` 73 tests pass — every METRICS §7 value + whole store/salesperson/city/category tables match the engine; D23) |
 | 4 | Issue detectors | 1:05–2:05 | A | 2a | ✅ Done 1:15 (F1–F7 + false-alarm checks 10/10 on 2 Nov; all 32 replay mornings run; D19–D22) |
 | 5 | Outputs: AM briefs, cards, follow-ups → JSON | 2:05–2:45 | A | 4 | ✅ Done 1:58 (`coach.py`, `followup.py`, `render.py`, `run.py`; real `site/data/` for 1 Oct → 2 Nov, 33 mornings in ≈ 45 s; `tests/test_outputs.py` passes; D24–D29) |
-| 6 | Final site + hosting + daily run (decide D2 by 2:30) | 2:45–3:20 | B | 2b, 5 | ⬜ |
+| 6 | Final site + hosting + daily run (decide D2 by 2:30) | 2:45–3:20 | B | 2b, 5 | 🟡 Built 14:10 — Action runs `run.py --replay-from 2026-10-01` + pytest before deploy; CSVs committed (D1); one-off cron 21 Nov 09:15 UTC; footer shows real time + trigger (D30). Waiting on user push + green run + public-URL check |
 | 7 | End-to-end check, README, video, submit | 3:20–4:30 | — | all | ⬜ |
 
 Lanes A, B and C can run in parallel chat windows (see "Parallel work" at the bottom).
@@ -65,7 +65,7 @@ time is left after Step 6 (decision D7).
 ## 3. Architecture
 
 ```
-data/raw/*.csv  (gitignored; see decision D1)
+data/raw/*.csv  (committed since Step 6; decision D1)
 storecoach/
   load.py       typed loading (IDs stay text)                 [draft exists]
   prep.py       bill-level basket facts, footfall flags,       [draft exists]
@@ -158,8 +158,8 @@ Possible extras to check in Step 4 (not confirmed): category avoidance (e.g. Hem
 - No look-ahead: a run as of D only sees data ≤ D−1.
 - Every action: who + what + when, doable today with existing people and stock. No action → no alert.
 - Cards ≤ 60 words (enforced by a test). AM: exactly 1 issue per weekday, none on weekends (D4).
-- Data CSVs may be committed (D1) — un-ignore `data/raw/*.csv` when setting up the daily run; zips/PDFs stay out.
-- Commit at the end of every step. Never commit `data/raw`, zips or PDFs. Last push 4:30 pm.
+- Data CSVs are committed (D1, done in Step 6: `.gitignore` keeps only `data/raw/*.csv`); zips/PDFs stay out.
+- Commit at the end of every step. Never commit zips or PDFs. Last push 4:30 pm.
 
 ---
 
