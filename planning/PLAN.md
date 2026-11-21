@@ -15,8 +15,8 @@ Vibe Coders Hackathon Ed. 3 · Sat 21 Nov 2026 · Manyavar "Store Coach" stateme
 |---|---|---|---|---|---|
 | 0 | Data exploration + findings | 11:00–11:40 | — | — | ✅ Done |
 | 1 | Metric definitions (`METRICS.md`) | 11:45–12:05 | A | 0 | ✅ Done 12:25 (windows/thresholds refined — see KNOWLEDGE_LOG D10–D14) |
-| 2a | Metrics engine | 12:05–1:05 | A | 1 | ⬜ |
-| 2b | Site skeleton (runs locally; hosting deferred — D2) | 12:05–12:50 | B | output contract (below) | ⬜ |
+| 2a | Metrics engine | 12:05–1:05 | A | 1 | ✅ Done 12:45 (all METRICS §7 check values match; 2 s per run) |
+| 2b | Site skeleton (runs locally; hosting deferred — D2) | 12:05–12:50 | B | output contract (below) | ✅ Done 12:45 (sample runs 30 Oct / 31 Oct / 2 Nov; contract additions in KNOWLEDGE_LOG D18) |
 | 3 | Independent number validation | 1:05–1:30 | C | 2a | ⬜ |
 | 4 | Issue detectors | 1:05–2:05 | A | 2a | ⬜ |
 | 5 | Outputs: AM briefs, cards, follow-ups → JSON | 2:05–2:45 | A | 4 | ⬜ |
