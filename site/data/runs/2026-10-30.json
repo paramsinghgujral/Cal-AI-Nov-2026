@@ -1,0 +1,725 @@
+{
+  "sample": true,
+  "as_of": "2026-10-30",
+  "data_through": "2026-10-29",
+  "managers": [
+    {
+      "area_manager_id": "AM-01",
+      "name": "Rakesh Srivastava",
+      "city": "Lucknow",
+      "stores": [
+        "LKO-01",
+        "LKO-02",
+        "LKO-03",
+        "LKO-04"
+      ],
+      "visit_today": null,
+      "today_issue_id": null,
+      "today_type": "no_visit",
+      "today_note": null,
+      "week_sent": [
+        "LKO-02:leaver:SP1018"
+      ],
+      "week": [
+        {
+          "date": "2026-10-26",
+          "type": "issue",
+          "issue_id": "LKO-02:leaver:SP1018",
+          "store_id": "LKO-02"
+        },
+        {
+          "date": "2026-10-27",
+          "type": "no_visit",
+          "issue_id": null,
+          "store_id": null
+        },
+        {
+          "date": "2026-10-28",
+          "type": "watch",
+          "issue_id": "LKO-04:ipb:watch",
+          "store_id": "LKO-04"
+        },
+        {
+          "date": "2026-10-29",
+          "type": "no_visit",
+          "issue_id": null,
+          "store_id": null
+        },
+        {
+          "date": "2026-10-30",
+          "type": "no_visit",
+          "issue_id": null,
+          "store_id": null
+        }
+      ],
+      "issues": [
+        {
+          "id": "LKO-02:leaver:SP1018",
+          "rank": 1,
+          "level": "issue",
+          "lever": "More bills",
+          "scope": "store",
+          "store_id": "LKO-02",
+          "salesperson_id": "SP1018",
+          "title": "Top seller Imran C. hasn't billed since 13 Sep; LKO-02 is converting fewer walk-ins",
+          "cause": "Imran C. made about 1 in 5 of LKO-02's bills before September. Since then conversion and items per bill have fallen.",
+          "action": {
+            "who": "Store manager, LKO-02",
+            "what": "Pair Faizan M. with Jitendra V. so every walk-in is greeted within a minute.",
+            "when": "Today, from opening"
+          },
+          "rupees_at_stake_week": 85000,
+          "evidence": [
+            {
+              "label": "Store conversion, last 56 days",
+              "value": "10.6%",
+              "baseline": "13.9%"
+            }
+          ],
+          "first_raised": "2026-10-26"
+        },
+        {
+          "id": "LKO-04:ipb:watch",
+          "rank": null,
+          "level": "watch",
+          "lever": "Bigger baskets",
+          "scope": "store",
+          "store_id": "LKO-04",
+          "salesperson_id": null,
+          "title": "LKO-04 items per bill slipping",
+          "cause": "Below what Lucknow peers predict, not by enough to be sure yet.",
+          "action": {
+            "who": "Store manager, LKO-04",
+            "what": "At the closing huddle, ask everyone to show a mojari with every kurta set.",
+            "when": "Today's closing huddle"
+          },
+          "rupees_at_stake_week": 11000,
+          "evidence": [
+            {
+              "label": "Items per bill, last 56 days",
+              "value": "1.93",
+              "baseline": "2.04"
+            }
+          ],
+          "first_raised": "2026-10-28"
+        }
+      ],
+      "role_models": [],
+      "followups": []
+    },
+    {
+      "area_manager_id": "AM-02",
+      "name": "Alok Tiwari",
+      "city": "Kanpur",
+      "stores": [
+        "KNP-01",
+        "KNP-02",
+        "KNP-03"
+      ],
+      "visit_today": "KNP-01",
+      "today_issue_id": "KNP-01:conversion:watch",
+      "today_type": "watch",
+      "today_note": null,
+      "week_sent": [
+        "KNP-03:repeat:SP1061"
+      ],
+      "week": [
+        {
+          "date": "2026-10-26",
+          "type": "issue",
+          "issue_id": "KNP-03:repeat:SP1061",
+          "store_id": "KNP-03"
+        },
+        {
+          "date": "2026-10-27",
+          "type": "no_visit",
+          "issue_id": null,
+          "store_id": null
+        },
+        {
+          "date": "2026-10-28",
+          "type": "no_visit",
+          "issue_id": null,
+          "store_id": null
+        },
+        {
+          "date": "2026-10-29",
+          "type": "no_visit",
+          "issue_id": null,
+          "store_id": null
+        },
+        {
+          "date": "2026-10-30",
+          "type": "watch",
+          "issue_id": "KNP-01:conversion:watch",
+          "store_id": "KNP-01"
+        }
+      ],
+      "issues": [
+        {
+          "id": "KNP-03:repeat:SP1061",
+          "rank": 1,
+          "level": "issue",
+          "lever": "More repeat",
+          "scope": "salesperson",
+          "store_id": "KNP-03",
+          "salesperson_id": "SP1061",
+          "title": "Kunal N.'s customers rarely come back",
+          "cause": "Placeholder text for layout testing.",
+          "action": {
+            "who": "Kunal N.",
+            "what": "Take the wedding date on every bill.",
+            "when": "Every bill today"
+          },
+          "rupees_at_stake_week": 17000,
+          "evidence": [
+            {
+              "label": "Repeat rate (cohort)",
+              "value": "1.9%",
+              "baseline": "4.6%"
+            }
+          ],
+          "first_raised": "2026-10-26"
+        },
+        {
+          "id": "KNP-01:conversion:watch",
+          "rank": null,
+          "level": "watch",
+          "lever": "More bills",
+          "scope": "store",
+          "store_id": "KNP-01",
+          "salesperson_id": null,
+          "title": "KNP-01 converting a little below Kanpur peers",
+          "cause": "Conversion is below what Kanpur peers predict, but this could still be luck.",
+          "action": {
+            "who": "Store manager, KNP-01",
+            "what": "Stand one salesperson at the door from 5 pm to greet walk-ins.",
+            "when": "Today"
+          },
+          "rupees_at_stake_week": 14000,
+          "evidence": [
+            {
+              "label": "Conversion, last 56 days",
+              "value": "12.1%",
+              "baseline": "13.0% expected"
+            }
+          ],
+          "first_raised": "2026-10-30"
+        }
+      ],
+      "role_models": [],
+      "followups": []
+    },
+    {
+      "area_manager_id": "AM-03",
+      "name": "Nitin Sinha",
+      "city": "Patna",
+      "stores": [
+        "PAT-01",
+        "PAT-02",
+        "PAT-03",
+        "PAT-04"
+      ],
+      "visit_today": null,
+      "today_issue_id": null,
+      "today_type": "no_visit",
+      "today_note": null,
+      "week_sent": [
+        "PAT-01:discount:SP1064",
+        "PAT-02:addon:SP1083"
+      ],
+      "week": [
+        {
+          "date": "2026-10-26",
+          "type": "issue",
+          "issue_id": "PAT-01:discount:SP1064",
+          "store_id": "PAT-01"
+        },
+        {
+          "date": "2026-10-27",
+          "type": "issue",
+          "issue_id": "PAT-02:addon:SP1083",
+          "store_id": "PAT-02"
+        },
+        {
+          "date": "2026-10-28",
+          "type": "no_visit",
+          "issue_id": null,
+          "store_id": null
+        },
+        {
+          "date": "2026-10-29",
+          "type": "no_visit",
+          "issue_id": null,
+          "store_id": null
+        },
+        {
+          "date": "2026-10-30",
+          "type": "no_visit",
+          "issue_id": null,
+          "store_id": null
+        }
+      ],
+      "issues": [
+        {
+          "id": "PAT-01:discount:SP1064",
+          "rank": 1,
+          "level": "issue",
+          "lever": "Bigger baskets",
+          "scope": "salesperson",
+          "store_id": "PAT-01",
+          "salesperson_id": "SP1064",
+          "title": "Manoj N. and Sanjay K. give about 3× the store's discount",
+          "cause": "Since July both give far bigger discounts than the rest of PAT-01.",
+          "action": {
+            "who": "Store manager, PAT-01",
+            "what": "Any discount above 2% needs your OK at the counter today.",
+            "when": "Today, before opening"
+          },
+          "rupees_at_stake_week": 64000,
+          "evidence": [
+            {
+              "label": "Manoj N. discount, last 91 days",
+              "value": "7.2%",
+              "baseline": "1.9% (peers)"
+            }
+          ],
+          "first_raised": "2026-10-26"
+        },
+        {
+          "id": "PAT-02:addon:SP1083",
+          "rank": 2,
+          "level": "issue",
+          "lever": "Bigger baskets",
+          "scope": "salesperson",
+          "store_id": "PAT-02",
+          "salesperson_id": "SP1083",
+          "title": "Aman B. rarely adds a jacket to a kurta set",
+          "cause": "About 1 in 20 kurta sets get a jacket from Aman B.; about 1 in 6 for the rest of PAT-02.",
+          "action": {
+            "who": "Aman B., shown by Ashish C.",
+            "what": "Bring a matching jacket to the trial room with every kurta set.",
+            "when": "Every kurta-set customer today"
+          },
+          "rupees_at_stake_week": 21000,
+          "evidence": [
+            {
+              "label": "Kurta → jacket, Aug–Oct",
+              "value": "3 of 59 (5%)",
+              "baseline": "15.8% store"
+            }
+          ],
+          "first_raised": "2026-10-27"
+        }
+      ],
+      "role_models": [],
+      "followups": []
+    },
+    {
+      "area_manager_id": "AM-04",
+      "name": "Pankaj Jha",
+      "city": "Muzaffarpur",
+      "stores": [
+        "MZF-01",
+        "MZF-02"
+      ],
+      "visit_today": null,
+      "today_issue_id": null,
+      "today_type": "no_visit",
+      "today_note": "Muzaffarpur's one issue and its one early signal were already covered this week, and nothing new crossed the line. No visit needed today.",
+      "week_sent": [
+        "MZF-02:category:SP1106"
+      ],
+      "week": [
+        {
+          "date": "2026-10-26",
+          "type": "issue",
+          "issue_id": "MZF-02:category:SP1106",
+          "store_id": "MZF-02"
+        },
+        {
+          "date": "2026-10-27",
+          "type": "watch",
+          "issue_id": "MZF-01:ipb:watch",
+          "store_id": "MZF-01"
+        },
+        {
+          "date": "2026-10-28",
+          "type": "no_visit",
+          "issue_id": null,
+          "store_id": null
+        },
+        {
+          "date": "2026-10-29",
+          "type": "no_visit",
+          "issue_id": null,
+          "store_id": null
+        },
+        {
+          "date": "2026-10-30",
+          "type": "no_visit",
+          "issue_id": null,
+          "store_id": null
+        }
+      ],
+      "issues": [
+        {
+          "id": "MZF-02:category:SP1106",
+          "rank": 1,
+          "level": "issue",
+          "lever": "Bigger baskets",
+          "scope": "salesperson",
+          "store_id": "MZF-02",
+          "salesperson_id": "SP1106",
+          "title": "Ankit P. almost never sells mojaris",
+          "cause": "Placeholder text for layout testing.",
+          "action": {
+            "who": "Ankit P., with Rahul Y.",
+            "what": "Offer two mojari sizes with every kurta set.",
+            "when": "Today"
+          },
+          "rupees_at_stake_week": 7000,
+          "evidence": [
+            {
+              "label": "Mojari share of items",
+              "value": "3%",
+              "baseline": "12% city"
+            }
+          ],
+          "first_raised": "2026-10-26"
+        },
+        {
+          "id": "MZF-01:ipb:watch",
+          "rank": null,
+          "level": "watch",
+          "lever": "Bigger baskets",
+          "scope": "store",
+          "store_id": "MZF-01",
+          "salesperson_id": null,
+          "title": "MZF-01 items per bill a little low",
+          "cause": "Below Bihar peers, not proven.",
+          "action": {
+            "who": "Store manager, MZF-01",
+            "what": "Show a mojari with every kurta set.",
+            "when": "Today"
+          },
+          "rupees_at_stake_week": 4000,
+          "evidence": [
+            {
+              "label": "Items per bill, last 56 days",
+              "value": "1.49",
+              "baseline": "1.55 expected"
+            }
+          ],
+          "first_raised": "2026-10-27"
+        }
+      ],
+      "role_models": [],
+      "followups": []
+    },
+    {
+      "area_manager_id": "AM-05",
+      "name": "Harish Gowda",
+      "city": "Bengaluru",
+      "stores": [
+        "BLR-01",
+        "BLR-02",
+        "BLR-03",
+        "BLR-04",
+        "BLR-05"
+      ],
+      "visit_today": "BLR-03",
+      "today_issue_id": "BLR-03:shifts:busy",
+      "today_type": "issue",
+      "today_note": null,
+      "week_sent": [
+        "BLR-02:addon:SP1128",
+        "BLR-03:shifts:busy"
+      ],
+      "week": [
+        {
+          "date": "2026-10-26",
+          "type": "issue",
+          "issue_id": "BLR-02:addon:SP1128",
+          "store_id": "BLR-02"
+        },
+        {
+          "date": "2026-10-27",
+          "type": "no_visit",
+          "issue_id": null,
+          "store_id": null
+        },
+        {
+          "date": "2026-10-28",
+          "type": "no_visit",
+          "issue_id": null,
+          "store_id": null
+        },
+        {
+          "date": "2026-10-29",
+          "type": "no_visit",
+          "issue_id": null,
+          "store_id": null
+        },
+        {
+          "date": "2026-10-30",
+          "type": "issue",
+          "issue_id": "BLR-03:shifts:busy",
+          "store_id": "BLR-03"
+        }
+      ],
+      "issues": [
+        {
+          "id": "BLR-03:shifts:busy",
+          "rank": 1,
+          "level": "issue",
+          "lever": "More bills",
+          "scope": "store",
+          "store_id": "BLR-03",
+          "salesperson_id": null,
+          "title": "BLR-03 is short on the floor at weekends",
+          "cause": "Manjunath K. and Vijay N. are off about half their days since September, mostly at weekends.",
+          "action": {
+            "who": "Store manager, BLR-03",
+            "what": "Roster Manjunath K. and Vijay N. for Sat 31 Oct and Sun 1 Nov; move their offs to Tuesday.",
+            "when": "Today, before the weekend roster is final"
+          },
+          "rupees_at_stake_week": 72000,
+          "evidence": [
+            {
+              "label": "Weekend conversion, last 56 days",
+              "value": "8.1%",
+              "baseline": "12.5% weekdays"
+            }
+          ],
+          "first_raised": "2026-10-30"
+        },
+        {
+          "id": "BLR-02:addon:SP1128",
+          "rank": 2,
+          "level": "issue",
+          "lever": "Bigger baskets",
+          "scope": "salesperson",
+          "store_id": "BLR-02",
+          "salesperson_id": "SP1128",
+          "title": "Venkatesh Y. sells sherwanis with nothing to go with them",
+          "cause": "No safa, mojari or mala on his sherwani bills since August.",
+          "action": {
+            "who": "Venkatesh Y., shown by Harsha M.",
+            "what": "Lay out a safa and mojari next to every sherwani.",
+            "when": "Every sherwani customer today"
+          },
+          "rupees_at_stake_week": 33000,
+          "evidence": [
+            {
+              "label": "Sherwani add-on, since Aug",
+              "value": "0 of 6",
+              "baseline": "83% peers"
+            }
+          ],
+          "first_raised": "2026-10-26"
+        }
+      ],
+      "role_models": [
+        {
+          "salesperson_id": "SP1110",
+          "name": "Karthik J.",
+          "store_id": "BLR-01",
+          "metric": "Repeat rate",
+          "value": "10.3%",
+          "store_value": "4.2%"
+        }
+      ],
+      "followups": []
+    },
+    {
+      "area_manager_id": "AM-06",
+      "name": "Mahesh Shetty",
+      "city": "Mysuru",
+      "stores": [
+        "MYS-01",
+        "MYS-02"
+      ],
+      "visit_today": "MYS-01",
+      "today_issue_id": "MYS:city_slowdown",
+      "today_type": "followup",
+      "today_note": "Follow-up on the Mysuru slowdown raised 19 Oct: has anything moved?",
+      "week_sent": [],
+      "week": [
+        {
+          "date": "2026-10-26",
+          "type": "watch",
+          "issue_id": "MYS-02:repeat:watch",
+          "store_id": "MYS-02"
+        },
+        {
+          "date": "2026-10-27",
+          "type": "no_visit",
+          "issue_id": null,
+          "store_id": null
+        },
+        {
+          "date": "2026-10-28",
+          "type": "no_visit",
+          "issue_id": null,
+          "store_id": null
+        },
+        {
+          "date": "2026-10-29",
+          "type": "no_visit",
+          "issue_id": null,
+          "store_id": null
+        },
+        {
+          "date": "2026-10-30",
+          "type": "followup",
+          "issue_id": "MYS:city_slowdown",
+          "store_id": "MYS-01"
+        }
+      ],
+      "issues": [
+        {
+          "id": "MYS:city_slowdown",
+          "rank": 1,
+          "level": "issue",
+          "lever": "More bills",
+          "scope": "city",
+          "store_id": null,
+          "salesperson_id": null,
+          "title": "Mysuru is slowing as a whole, not one store",
+          "cause": "Both stores convert fewer walk-ins, with smaller and cheaper baskets, vs a year ago and vs other cities.",
+          "action": {
+            "who": "Store managers, MYS-01 and MYS-02",
+            "what": "Put the Diwali kurta-set range at the entrance; greet every walk-in at the door.",
+            "when": "Today, before opening"
+          },
+          "rupees_at_stake_week": 41000,
+          "evidence": [
+            {
+              "label": "City conversion, last 56 days",
+              "value": "7.6%",
+              "baseline": "9.0% a year ago"
+            }
+          ],
+          "first_raised": "2026-10-19"
+        },
+        {
+          "id": "MYS-02:repeat:watch",
+          "rank": null,
+          "level": "watch",
+          "lever": "More repeat",
+          "scope": "store",
+          "store_id": "MYS-02",
+          "salesperson_id": null,
+          "title": "MYS-02 repeat rate slightly low",
+          "cause": "Below Karnataka peers, not proven.",
+          "action": {
+            "who": "Store manager, MYS-02",
+            "what": "Ask every first-time customer for the wedding date.",
+            "when": "Today"
+          },
+          "rupees_at_stake_week": 3000,
+          "evidence": [
+            {
+              "label": "Repeat rate (cohort)",
+              "value": "2.9%",
+              "baseline": "3.8% expected"
+            }
+          ],
+          "first_raised": "2026-10-27"
+        }
+      ],
+      "role_models": [],
+      "followups": [
+        {
+          "issue_id": "MYS:city_slowdown",
+          "raised_on": "2026-10-19",
+          "metric": "City conversion",
+          "at_alert": "7.4%",
+          "now": "7.6%",
+          "moved": "no change",
+          "note": "Still below last year; the market problem continues."
+        }
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "salesperson_id": "SP1083",
+      "name": "Aman B.",
+      "store_id": "PAT-02",
+      "kind": "gap",
+      "lever": "Bigger baskets",
+      "behaviour": "Kurta set → jacket add-on",
+      "peer": {
+        "salesperson_id": "SP1082",
+        "name": "Ashish C."
+      },
+      "action": "Bring a jacket with every kurta set.",
+      "text": "Ashish C. adds a jacket to about 1 in 4 kurta sets; you, about 1 in 20. Today, bring a matching jacket to the trial room with every kurta set.",
+      "word_count": 30
+    },
+    {
+      "salesperson_id": "SP1082",
+      "name": "Ashish C.",
+      "store_id": "PAT-02",
+      "kind": "keep_doing",
+      "lever": "Bigger baskets",
+      "behaviour": "Kurta set → jacket add-on",
+      "peer": null,
+      "action": "Keep pairing jackets.",
+      "text": "You add a jacket to about 1 in 4 kurta sets, the best in PAT-02. Keep doing it today.",
+      "word_count": 19
+    },
+    {
+      "salesperson_id": "SP1110",
+      "name": "Karthik J.",
+      "store_id": "BLR-01",
+      "kind": "keep_doing",
+      "lever": "More repeat",
+      "behaviour": "Repeat rate",
+      "peer": null,
+      "action": "Keep taking wedding dates.",
+      "text": "Your customers come back more than anyone's in BLR-01. Keep taking wedding dates and booking fittings today.",
+      "word_count": 17
+    },
+    {
+      "salesperson_id": "SP1141",
+      "name": "Manjunath K.",
+      "store_id": "BLR-03",
+      "kind": "gap",
+      "lever": "More bills",
+      "behaviour": "Items per bill",
+      "peer": {
+        "salesperson_id": "SP1142",
+        "name": "Vijay N."
+      },
+      "action": "Show a mojari with every kurta set.",
+      "text": "Vijay N. sells about 2.3 items per bill; you, about 1.8. Today, offer a mojari with every kurta set before the customer goes to the counter.",
+      "word_count": 26
+    }
+  ],
+  "data_issues": [
+    {
+      "type": "camera_zero",
+      "store_id": "PAT-03",
+      "detail": "Footfall shows 0 on 12 days while 1–3 bills a day were made. Likely camera fault.",
+      "dates": "2026-10-05 → 2026-10-16",
+      "excluded_from": "conversion"
+    },
+    {
+      "type": "placeholder_customer",
+      "store_id": null,
+      "detail": "Customer C99999999 has 1,800+ bills across 19 stores: a dummy mobile number.",
+      "dates": "2024-11-01 →",
+      "excluded_from": "repeat rate"
+    },
+    {
+      "type": "new_store",
+      "store_id": "BLR-05",
+      "detail": "Opened 10 Oct 2026; under 90 days of data.",
+      "dates": "2026-10-10 →",
+      "excluded_from": "store comparisons and alerts"
+    }
+  ]
+}

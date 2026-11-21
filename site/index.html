@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Store Coach</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <h1>Store Coach</h1>
+      <p class="sub">Manyavar · daily brief</p>
+    </div>
+    <label class="picker">
+      <span>Morning of</span>
+      <select id="run-picker" aria-label="Pick a morning"></select>
+    </label>
+  </header>
+
+  <div id="sample-banner" class="banner" hidden>
+    Sample data, written by hand to test the layout. Not engine output.
+  </div>
+
+  <p id="run-meta" class="meta"></p>
+
+  <nav class="tabs" role="tablist">
+    <button role="tab" data-tab="am">Managers</button>
+    <button role="tab" data-tab="sp">Salespeople</button>
+    <button role="tab" data-tab="fu">Follow-ups</button>
+    <button role="tab" data-tab="di">Data</button>
+  </nav>
+
+  <main id="view" aria-live="polite"></main>
+
+  <footer class="foot" id="foot"></footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

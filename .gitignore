@@ -3,6 +3,6 @@
 *.pdf
 
 # Raw data pack (pending OK from Manyavar to publish)
-data/
+/data/
 __pycache__/
 *.pyc
