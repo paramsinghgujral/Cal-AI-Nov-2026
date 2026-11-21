@@ -70,6 +70,7 @@ each section. Keep entries short and dated (time is enough — it's all 21 Nov 2
 | D12 | Repeat window | DECIDED (Step 1) | Cohort = first bills D−540…D−121; repeat = any bill at any store ≥ 30 days later, up to D−1. 30–120 days gave only 1.2% (median gap before a repeat is 166 days). |
 | D13 | City slowdown comparison | DECIDED (Step 1) | City vs all other cities, recent 56 days vs the same days 364 days earlier. Same-state peers fail: 2 cities per state mirror each other. |
 | D14 | Leaver / missing-shift rules | DECIDED (Step 1) | Leaver: last bill must be in D−90…D−15 (keeps July churn out). Missing shifts: off-rate ≥ 35% and ≥ +15 pp above own baseline (with "2×", SP1141 just misses). |
+| D15 | Three levels: Issue / Watch / Card gap | DECIDED (user, after Step 1) | Strict thresholds stay for Issues. Empty AM weekdays fall back to: follow-up visit → Watch (z between −1.5 and the threshold, labelled "not proven") → "no visit needed". Cards: largest ₹ gap vs the best active same-store peer, minimum sample only, worded as a nudge; no gap → "keep doing this" card. Named role models stay at z ≥ +2.5. See METRICS.md §4. |
 
 ## 5. Clarifications & Q&A log
 
@@ -82,6 +83,7 @@ each section. Keep entries short and dated (time is enough — it's all 21 Nov 2
 - 11:50 — How repeat customers are identified: `bills.customer_id` = the customer's **mobile number, hashed** (not name, not card). Same number → same ID across visits and stores. Limits: a store typing a dummy number creates fake "regulars" (C99999999, 1,833 bills — excluded); a family sharing one phone counts as one customer; a customer giving a different number looks new.
 - 12:24 — User asked why some metrics say "good days only" and how the z-scores/thresholds work, assuming no stats background. The plain-language answer is now in METRICS.md (§1 bad footfall day, §4 "In plain words" box). Use the same framing in the README and video. User approved METRICS.md.
 - 12:24 — Changed from the Step 0 numbers on purpose (see METRICS.md §7): overall repeat 4.0% (was 7.3%) and Karthik J. 10.3% vs peers 4.2% (was 18.4% vs store 7.5%), because the cohort definition changed; PAT-01 discounts are now vs peers without the salesperson (SP1064 7.11%, SP1065 6.04% vs ~1.9–2.0%). Muzaffarpur's Oct dip is not flagged under the year-over-year city rule (conversion +9.5%), so it's treated as noise.
+- After Step 1 — User asked whether the thresholds find enough. Scratch count as of 2 Nov (same on 5 and 12 Oct): Issues per AM city — Bengaluru 8, Patna 6, Lucknow 2, Kanpur 1, Muzaffarpur 1, Mysuru 1 (city slowdown); role models 7 (Patna 0); 13 of 131 active salespeople have a flagged gap. All of F1–F6 found and few extras, so the bar is right for Issues but too thin for D4 and daily cards → D15.
 
 ## 6. Open questions
 

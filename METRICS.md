@@ -74,6 +74,16 @@ Families walk in together, so walk-ins are not fully independent. The z-score is
 
 A leaver or missing shifts with no significant store gap is not sent to the AM (₹0; the site shows it as "watch").
 
+**Three levels.** The strict rules above make an **Issue**. Two lighter levels make sure everyone gets something useful without passing off weak signals as problems. At 2 Nov the strict rules give Lucknow, Kanpur, Muzaffarpur and Mysuru only 1–2 issues each against 5 weekdays, and only 13 of 131 active salespeople have a gap.
+
+| Level | Rule | Used for |
+|---|---|---|
+| **Issue** | All rules in the table above | AM brief, ranked by ₹ |
+| **Watch** | Same metric, minimum sample and minimum gap size as the Issue rule, but z between **−1.5** and the Issue threshold. Shown as "early signal — check, not proven". | An AM weekday only when no unsent Issue is left. Order: unsent Issues by ₹ → follow-up visit on an issue sent 7+ days ago → Watch items by ₹ → "no visit needed today". |
+| **Card gap** | The salesperson's largest ₹ gap among add-on rates, category share, discount %, repeat rate and **salesperson IPB** (items ÷ bills, Salesperson window). Each gap is measured against the **best active peer in the same store** on that behaviour. Only the minimum sample applies, no z. No gap → a "keep doing this" card on their best metric vs the store. | Daily salesperson card (≤ 60 words). Worded as a nudge ("Ravi adds a jacket to 25% of kurta sets; you, 12%"), never as a problem. |
+
+Card ₹ uses the §5 formula with the best peer's value in place of the peer average (salesperson IPB: (peer − own IPB) × own weekly bills × store avg item price). The peer on a card needs the same minimum sample. Only z ≥ +2.5 people are called **role models** on the site.
+
 ## 5. ₹ at stake per week (lost sales, revenue incl. GST)
 
 Weekly volumes are window totals ÷ (days in window ÷ 7): 8 weeks for Recent, 13 for Salesperson, 60 for the Repeat cohort.
